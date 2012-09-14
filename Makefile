@@ -1,7 +1,7 @@
 # $Id$
 .PHONY: update shell utils editors tex db web prog mdi ide l209
 
-all: update shell utils editors tex db web prog mdi ide
+all: update shell utils editors tex db web prog mdi ide java version
 
 update:
 	apt-get update
@@ -52,15 +52,28 @@ meego:
 
 mdi: meego tex
 
-prog: editors
+version:
 	apt-get install \
 		git \
 		subversion \
 		cvs \
+		mercurial
+
+prog: editors java version
+	apt-get install \
 		ghc \
 		swi-prolog \
 		perl \
 		idle-python3.2 \
 		idle-python2.7
+
+java:
+	apt-get install \
+		openjdk-7-jre \
+		openjdk-7-jdk \
+		openjdk-7-doc \
+		openjdk-6-jre \
+		openjdk-6-jdk \
+		openjdk-6-doc
 
 l209: all
