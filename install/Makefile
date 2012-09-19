@@ -3,14 +3,23 @@
 CATEGORY=		conf
 PUB_FILES=		Makefile
 
-ANDROID?=		/usr/local/android
-ANDROID_SDK?=	${ANDROID}/sdk
-ANDROID_NDK?=	${ANDROID}/ndk
+ANDROID?=				/usr/local/android
+ANDROID_SDK?=			${ANDROID}/sdk
+# this is the name of the directory in the tarball
+ANDROID_SDK_NAME?=		android-sdk-linux
+# this is the file on google's servers
+ANDROID_SDK_FILE?=		android-sdk_r20.0.3-linux.tgz
+ANDROID_NDK?=			${ANDROID}/ndk
+ANDROID_NDK_NAME?=		android-ndk-r8b
+ANDROID_NDK_FILE?=		android-ndk-r8b-linux-x86.tar.bz2
 
 APTGET?=		apt-get -y
 INSTALLFILES?=	/var/install
 
-.PHONY: update shell utils editors tex db web prog mdi ide java version android
+.PHONY: update shell utils editors \
+	tex miuntex \
+	db web prog mdi ide java version \
+	android android-device-rules
 
 all: update shell utils editors tex db web prog mdi ide java version android
 
@@ -50,14 +59,16 @@ ide:
 		eclipse \
 	#	kdevelop
 
-tex:
+miuntex:
+	wget -O ${INSTALLFILES}/miuntex.tar.gz \
+		http://ver.miun.se/latex/packages-all.tar.gz
+	mkdir -p ${INSTALLFILES}/miuntex
+	tar -zxf ${INSTALLFILES}/miuntex.tar.gz -C ${INSTALLFILES}/miuntex
+	${MAKE} -C ${INSTALLFILES}/miuntex/packages-all install
+
+tex: miuntex
 	${APTGET} install \
 		texlive-full
-	wget -O ${INSTALLFILES}/tex.tar.gz \
-		http://ver.miun.se/latex/packages-all.tar.gz
-	mkdir -p ${INSTALLFILES}/tex
-	tar -zxf ${INSTALLFILES}/tex.tar.gz -C ${INSTALLFILES}/tex
-	${MAKE} -C ${INSTALLFILES}/tex/packages-all install
 
 db:
 	${APTGET} install \
@@ -80,44 +91,48 @@ ${INSTALLFILES}/meego/harmattan-sdk-setup.py::
 meego: ${INSTALLFILES}/meego/harmattan-sdk-setup.py
 	${INSTALLFILES}/meego/harmattan-sdk-setup.py admininstall
 
-${INSTALLFILES}/android/android-sdk.tgz: \
-	${INSTALLFILES}/android/android-sdk-r20.tgz
-	ln -sf ${^} ${@}
-
-${INSTALLFILES}/android/android-sdk-r20.tgz:
+${INSTALLFILES}/android/${ANDROID_SDK_FILE}:
 	mkdir -p ${INSTALLFILES}/android
 	wget -O ${@} \
-		http://dl.google.com/android/android-sdk_r20.0.3-linux.tgz
+		http://dl.google.com/android/${ANDROID_SDK_FILE}
 
-${INSTALLFILES}/android/android-ndk.tar.bz2: \
-	${INSTALLFILES}/android/android-ndk-r8b.tar.bz2
-	ln -sf ${^} ${@}
-
-${INSTALLFILES}/android/android-ndk-r8b.tar.bz2:
+${INSTALLFILES}/android/${ANDROID_NDK_FILE}:
 	mkdir -p ${INSTALLFILES}/android
 	cd ${INSTALLFILES}/android
 	wget -O ${@} \
-		http://dl.google.com/android/ndk/android-ndk-r8b-linux-x86.tar.bz2
+		http://dl.google.com/android/ndk/${ANDROID_NDK_FILE}
 
-${ANDROID_SDK}: ${INSTALLFILES}/android/android-sdk.tgz
-	mkdir -p ${ANDROID_SDK}
-	tar -xzf ${INSTALLFILES}/android/android-sdk.tgz -C ${ANDROID_SDK}
+${ANDROID_SDK}: ${INSTALLFILES}/android/${ANDROID_SDK_FILE}
+	tar -xzf ${^} -C ${ANDROID}
+	mv ${ANDROID}/${ANDROID_SDK_NAME} ${ANDROID_SDK}
+	chown -R root:root ${ANDROID_SDK}
+	chmod -R 0755 ${ANDROID_SDK}
 	if ! grep "^ANDROID_SDK=" /etc/profile; then \
-		echo "ANDROID_SDK=${ANDROID_SDK}" >> /etc/profile; \
-		echo "export ANDROID_SDK PATH=\$${PATH}:\$${ANDROID_SDK}" \
+		echo "export ANDROID_SDK=${ANDROID_SDK}" >> /etc/profile; \
+		echo "export PATH=\$${PATH}:\$${ANDROID_SDK}/tools" \
+			>> /etc/profile; \
+		echo "export PATH=\$${PATH}:\$${ANDROID_SDK}/platform-tools" \
 			>> /etc/profile; \
 	fi
+	${ANDROID_SDK}/tools/android update sdk -u < /dev/null
 
-${ANDROID_NDK}: ${INSTALLFILES}/android/android-ndk.tar.bz2
-	mkdir -p ${ANDROID_NDK}
-	tar -xjf ${INSTALLFILES}/android/android-ndk.tar.bz2 -C ${ANDROID_NDK}
+${ANDROID_NDK}: ${INSTALLFILES}/android/${ANDROID_NDK_FILE}
+	tar -xjf ${INSTALLFILES}/android/${ANDROID_NDK_FILE} -C ${ANDROID}
+	mv ${ANDROID}/${ANDROID_NDK_NAME} ${ANDROID_NDK}
+	chown -R root:root ${ANDROID_NDK}
+	chmod -R 0755 ${ANDROID_NDK}
 	if ! grep "^ANDROID_NDK=" /etc/profile; then \
-		echo "ANDROID_NDK=${ANDROID_NDK}" >> /etc/profile; \
-		echo "export ANDROID_NDK PATH=\$${PATH}:\$${ANDROID_NDK}" \
+		echo "export ANDROID_NDK=${ANDROID_NDK}" >> /etc/profile; \
+		echo "export PATH=\$${PATH}:\$${ANDROID_NDK}" \
 			>> /etc/profile; \
 	fi
 
-android: java ${ANDROID_SDK} ${ANDROID_NDK}
+android-device-rules:
+	# XXX ulf's shellscript to fix device rules should go here
+	true
+
+android: java ${ANDROID_SDK} ${ANDROID_NDK} android-device-rules
+	${ANDROID_SDK}/tools/android update sdk -u < /dev/null
 	if ! grep "^ANDROID=" /etc/profile; then \
 		echo "export ANDROID=${ANDROID}" >> /etc/profile; \
 	fi
