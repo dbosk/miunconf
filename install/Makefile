@@ -23,7 +23,7 @@ INSTALLFILES?=	/var/install
 
 all: update shell utils editors tex db web prog mdi ide java version android
 
-update:
+update: build miuntex ${ANDROID_SDK} ${ANDROID_NDK}
 	${APTGET} update
 	${APTGET} upgrade
 
