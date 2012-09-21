@@ -1,4 +1,5 @@
 # $Id$
+# Author: Daniel Bosk <daniel.bosk@miun.se>
 
 CATEGORY=		conf
 PUB_FILES=		Makefile
