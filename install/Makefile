@@ -40,7 +40,7 @@ build:
 		http://ver.miun.se/build/build-all.tar.gz
 	mkdir -p ${INSTALLFILES}/build
 	tar -zxf ${INSTALLFILES}/build.tar.gz -C ${INSTALLFILES}/build
-	${MAKE} -C ${INSTALLFILES}/build/build-all install
+	${MAKE} PREFIX=/usr/local -C ${INSTALLFILES}/build/build-all install
 
 utils:
 	${APTGET} install \
@@ -64,7 +64,8 @@ miuntex:
 		http://ver.miun.se/latex/packages-all.tar.gz
 	mkdir -p ${INSTALLFILES}/miuntex
 	tar -zxf ${INSTALLFILES}/miuntex.tar.gz -C ${INSTALLFILES}/miuntex
-	${MAKE} -C ${INSTALLFILES}/miuntex/packages-all install
+	${MAKE} PREFIX=/usr/local/texlive/texmf-local \
+		-C ${INSTALLFILES}/miuntex/packages-all install
 
 tex: miuntex
 	${APTGET} install \
@@ -184,8 +185,8 @@ mono:
 l209: all
 
 
-miun.pub.mk: build
-miun.package.mk: build
+/usr/local/include/miun.pub.mk: build
+/usr/local/include/miun.package.mk: build
 
 include miun.pub.mk
 include miun.package.mk
