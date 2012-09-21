@@ -185,8 +185,8 @@ mono:
 l209: all
 
 
-/usr/local/include/miun.pub.mk: build
-/usr/local/include/miun.package.mk: build
+miun.pub.mk: build
+miun.package.mk: build
 
 include miun.pub.mk
 include miun.package.mk
