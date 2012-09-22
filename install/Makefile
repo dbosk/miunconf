@@ -50,7 +50,10 @@ utils:
 		p7zip \
 		bzip2
 
-editors:
+/usr/share/vim/vimrc: vimrc
+	install -Dp ${^} ${@}
+
+editors: /usr/share/vim/vimrc
 	${APTGET} install \
 		vim \
 		emacs

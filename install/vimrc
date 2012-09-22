@@ -1,0 +1,46 @@
+set background=dark
+set fileencoding=utf8
+
+" paste-mode on F2
+nnoremap <F2> :set invpaste paste?<CR>
+imap <F2> <ESC><F2>
+set pastetoggle=<F2>
+
+" auto-indent entire file on F10
+nmap <F10> 1G=G
+" tabbed (F12) or spaced (F11) indents
+nmap <F11> :%s/\t/    /g<CR>
+nmap <F12> :%s/    /\t/g<CR>
+
+" informative status line
+set statusline=%F%m%r%h%w\ [TYPE=%Y\ %{&ff}]\ [%l/%L\ (%p%%)]
+" use a scollbuffer of 3 lines
+set scrolloff=3
+" show a cursorline
+set cursorline
+
+syntax enable
+
+set wildmode=list:longest,full
+set noshowmode
+set textwidth=79
+set formatoptions=tlrno1caw
+" set indent settings
+set autoindent
+set smartindent
+set tabstop=4
+set shiftwidth=4
+"set expandtab " tab -> whitespaces
+set cinoptions=c1,:0,t0,+4,(0,W4
+
+filetype on
+filetype indent on " indent depends on filetype
+
+autocmd FileType mail,text,human set formatoptions-=c textwidth=72
+autocmd FileType tex set tabstop=2 shiftwidth=2 formatoptions-=c
+autocmd FileType bib set tabstop=2 shiftwidth=2
+autocmd FileType c,cpp,slang set cindent
+autocmd FileType xml,xsd,xslt,html,xhtml set tabstop=2 shiftwidth=2
+autocmd FileType make set tabstop=4 shiftwidth=4
+
+set printdevice=laserjet
