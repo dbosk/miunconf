@@ -22,7 +22,8 @@ INSTALLFILES?=	/var/install
 	db web prog mdi ide java version \
 	android android-device-rules
 
-all: update shell utils editors tex db web prog mdi ide java version android
+all: update shell utils editors miuntex \
+	db web prog mdi ide java version android
 
 update: build miuntex ${ANDROID_SDK} ${ANDROID_NDK}
 	${APTGET} update
@@ -60,15 +61,16 @@ ide:
 		eclipse \
 	#	kdevelop
 
-miuntex:
+miuntex: tex
 	wget -O ${INSTALLFILES}/miuntex.tar.gz \
 		http://ver.miun.se/latex/packages-all.tar.gz
 	mkdir -p ${INSTALLFILES}/miuntex
 	tar -zxf ${INSTALLFILES}/miuntex.tar.gz -C ${INSTALLFILES}/miuntex
 	${MAKE} PREFIX=/usr/local/share/texmf \
 		-C ${INSTALLFILES}/miuntex/packages-all install
+	-texhash
 
-tex: miuntex
+tex:
 	${APTGET} install \
 		texlive-full
 
