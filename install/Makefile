@@ -65,7 +65,7 @@ miuntex:
 		http://ver.miun.se/latex/packages-all.tar.gz
 	mkdir -p ${INSTALLFILES}/miuntex
 	tar -zxf ${INSTALLFILES}/miuntex.tar.gz -C ${INSTALLFILES}/miuntex
-	${MAKE} PREFIX=/usr/local/texlive/texmf-local \
+	${MAKE} PREFIX=/usr/local/share/texmf \
 		-C ${INSTALLFILES}/miuntex/packages-all install
 
 tex: miuntex
