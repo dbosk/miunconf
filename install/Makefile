@@ -156,10 +156,7 @@ mediakodning: wireshark
 wireshark:
 	${APTGET} install \
 		wireshark
-	if ! grep wireshark /etc/sudoers; then \
-		echo "%users	ALL=NOPASSWD:/usr/bin/wireshark" > \
-			/etc/sudoers.d/wireshark; \
-	fi
+	setcap 'CAP_NET_RAW+eip CAP_NET_ADMIN+eip' /usr/bin/dumpcap
 
 version:
 	${APTGET} install \
