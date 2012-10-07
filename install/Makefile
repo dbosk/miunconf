@@ -20,10 +20,11 @@ INSTALLFILES?=	/var/install
 .PHONY: update shell utils editors \
 	tex miuntex \
 	db web prog mdi ide java version \
-	android android-device-rules
+	android android-device-rules \
+	mediakodning wireshark
 
 all: update shell utils editors miuntex \
-	db web prog mdi ide java version android
+	db web prog mdi ide java version android mediakodning
 
 update: build miuntex ${ANDROID_SDK} ${ANDROID_NDK}
 	${APTGET} update
@@ -149,6 +150,16 @@ android: java ${ANDROID_SDK} ${ANDROID_NDK} android-device-rules
 		ia32-libs
 
 mdi: meego android tex
+
+mediakodning: wireshark
+
+wireshark:
+	${APTGET} install \
+		wireshark
+	if ! grep wireshark /etc/sudoers; then \
+		echo "%users	ALL=NOPASSWD:/usr/bin/wireshark" > \
+			/etc/sudoers.d/wireshark; \
+	fi
 
 version:
 	${APTGET} install \
