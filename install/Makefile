@@ -21,7 +21,8 @@ INSTALLFILES?=	/var/install
 	tex miuntex \
 	db web prog mdi ide java version \
 	android android-device-rules \
-	mediakodning wireshark
+	mediakodning wireshark \
+	build-essential
 
 all: update shell utils editors miuntex \
 	db web prog mdi ide java version android mediakodning
@@ -77,6 +78,10 @@ miuntex: tex
 tex:
 	${APTGET} install \
 		texlive-full
+
+build-essential:
+	${APTGET} install \
+		build-essential
 
 db:
 	${APTGET} install \
@@ -149,7 +154,7 @@ android: java ${ANDROID_SDK} ${ANDROID_NDK} android-device-rules
 		abootimg \
 		ia32-libs
 
-mdi: meego android tex
+mdi: android tex
 
 mediakodning: wireshark
 
@@ -165,7 +170,7 @@ version:
 		cvs \
 		mercurial
 
-prog: editors java version mono
+prog: editors java version mono build-essential
 	${APTGET} install \
 		ghc \
 		swi-prolog \
