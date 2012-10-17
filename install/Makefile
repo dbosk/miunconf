@@ -2,7 +2,7 @@
 # Author: Daniel Bosk <daniel.bosk@miun.se>
 
 CATEGORY=		conf
-PUB_FILES=		Makefile
+PUB_FILES=		Makefile vimrc 51-android.rules
 
 ANDROID?=				/usr/local/android
 ANDROID_SDK?=			${ANDROID}/sdk
@@ -140,9 +140,10 @@ ${ANDROID_NDK}: ${INSTALLFILES}/android/${ANDROID_NDK_FILE}
 			>> /etc/profile; \
 	fi
 
-android-device-rules:
-	# XXX ulf's shellscript to fix device rules should go here
-	true
+android-device-rules: /etc/udev/rules.d/51-android.rules
+
+/etc/udev/rules.d/51-android.rules: 51-android.rules
+	${CP} $^ $@
 
 android: java ${ANDROID_SDK} ${ANDROID_NDK} android-device-rules
 	${ANDROID_SDK}/tools/android update sdk -u < /dev/null
