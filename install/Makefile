@@ -2,7 +2,7 @@
 # Author: Daniel Bosk <daniel.bosk@miun.se>
 
 CATEGORY=		conf
-PUB_FILES=		Makefile vimrc 51-android.rules
+PUB_FILES=		Makefile
 
 ANDROID?=				/usr/local/android
 ANDROID_SDK?=			${ANDROID}/sdk
@@ -51,6 +51,9 @@ utils:
 		unrar \
 		p7zip \
 		bzip2
+
+vimrc:
+	wget http://ver.miun.se/conf/vimrc
 
 /usr/share/vim/vimrc: vimrc
 	install -Dp ${^} ${@}
@@ -101,8 +104,8 @@ ${INSTALLFILES}/meego/harmattan-sdk-setup.py::
 		http://harmattan-dev.nokia.com/stable/harmattan/harmattan-sdk-setup.py
 	chmod +x ${INSTALLFILES}/meego/harmattan-sdk-setup.py
 
-meego: ${INSTALLFILES}/meego/harmattan-sdk-setup.py
-	${INSTALLFILES}/meego/harmattan-sdk-setup.py admininstall
+#meego: ${INSTALLFILES}/meego/harmattan-sdk-setup.py
+#	${INSTALLFILES}/meego/harmattan-sdk-setup.py admininstall
 
 ${INSTALLFILES}/android/${ANDROID_SDK_FILE}:
 	mkdir -p ${INSTALLFILES}/android
@@ -139,6 +142,9 @@ ${ANDROID_NDK}: ${INSTALLFILES}/android/${ANDROID_NDK_FILE}
 		echo "export PATH=\$${PATH}:\$${ANDROID_NDK}" \
 			>> /etc/profile; \
 	fi
+
+51-android.rules:
+	wget http://ver.miun.se/conf/51-android.rules
 
 android-device-rules: /etc/udev/rules.d/51-android.rules
 
