@@ -58,6 +58,12 @@ vimrc:
 /usr/share/vim/vimrc: vimrc
 	install -Dp ${^} ${@}
 
+papersize:
+	wget http://ver.miun.se/conf/papersize
+
+/etc/papersize: papersize
+	install -Dp $^ $@
+
 editors: /usr/share/vim/vimrc
 	${APTGET} install \
 		vim \
@@ -95,7 +101,9 @@ web: db
 	${APTGET} install \
 		apache2 \
 		php5 \
-		pear
+		pear \
+		chromium \
+		firefox
 
 ${INSTALLFILES}/meego/harmattan-sdk-setup.py::
 	mkdir -p ${INSTALLFILES}/meego
@@ -183,7 +191,9 @@ prog: editors java version mono build-essential
 		swi-prolog \
 		perl \
 		python \
-		python3
+		python3 \
+		umbrello \
+		dia
 
 java:
 	${APTGET} install \
