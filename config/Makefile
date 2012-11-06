@@ -2,7 +2,7 @@
 # Author: Daniel Bosk <daniel.bosk@miun.se>
 
 CATEGORY=		conf
-PUB_FILES=		vimrc 51-android.rules
+PUB_FILES=		vimrc 51-android.rules papersize
 
 .PHONY: clean
 
