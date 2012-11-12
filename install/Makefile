@@ -127,6 +127,7 @@ ${INSTALLFILES}/android/${ANDROID_NDK_FILE}:
 		http://dl.google.com/android/ndk/${ANDROID_NDK_FILE}
 
 ${ANDROID_SDK}: ${INSTALLFILES}/android/${ANDROID_SDK_FILE}
+	mkdir -p ${ANDROID}
 	tar -xzf ${^} -C ${ANDROID}
 	mv ${ANDROID}/${ANDROID_SDK_NAME} ${ANDROID_SDK}
 	chown -R root:root ${ANDROID_SDK}
@@ -141,6 +142,7 @@ ${ANDROID_SDK}: ${INSTALLFILES}/android/${ANDROID_SDK_FILE}
 	${ANDROID_SDK}/tools/android update sdk -u < /dev/null
 
 ${ANDROID_NDK}: ${INSTALLFILES}/android/${ANDROID_NDK_FILE}
+	mkdir -p ${ANDROID}
 	tar -xjf ${INSTALLFILES}/android/${ANDROID_NDK_FILE} -C ${ANDROID}
 	mv ${ANDROID}/${ANDROID_NDK_NAME} ${ANDROID_NDK}
 	chown -R root:root ${ANDROID_NDK}
@@ -151,15 +153,16 @@ ${ANDROID_NDK}: ${INSTALLFILES}/android/${ANDROID_NDK_FILE}
 			>> /etc/profile; \
 	fi
 
-51-android.rules:
-	wget http://ver.miun.se/conf/51-android.rules
+${INSTALLFILES}/android/51-android.rules:
+	wget -O ${INSTALLFILES}/android http://ver.miun.se/conf/51-android.rules
 
 android-device-rules: /etc/udev/rules.d/51-android.rules
 
-/etc/udev/rules.d/51-android.rules: 51-android.rules
-	${CP} $^ $@
+/etc/udev/rules.d/51-android.rules:
+	wget -O $@ http://ver.miun.se/conf/51-android.rules
 
 android: java ${ANDROID_SDK} ${ANDROID_NDK} android-device-rules
+	mkdir -p ${ANDROID}
 	${ANDROID_SDK}/tools/android update sdk -u < /dev/null
 	if ! grep "^ANDROID=" /etc/profile; then \
 		echo "export ANDROID=${ANDROID}" >> /etc/profile; \
@@ -213,8 +216,8 @@ java: ${INSTALLFILES}/java/sun-java6-jdk.bin
 		ant ant-doc
 	cd ${INSTALLFILES}/java && \
 		${INSTALLFILES}/java/sun-java6-jdk.bin < /dev/null
-	echo $$( update-alternatives --config java < /dev/null | \
-			sed -En '/java-6-sun/s/[* ]*([0-9]{1,}) *.*$$/\1/p' ) | \
+	update-alternatives --config java < /dev/null | \
+		sed -En '/java-6-sun/s/[* ]*([0-9]{1,}) *.*$$/\1/p' | \
 		update-alternatives --config java
 
 mono:
