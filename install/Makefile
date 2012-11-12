@@ -195,7 +195,14 @@ prog: editors java version mono build-essential
 		umbrello \
 		dia
 
-java:
+${INSTALLFILES}/java/sun-java6-jdk.bin:
+	mkdir -p ${INSTALLFILES}/java
+	wget -O $@ \
+		http://ver.miun.se/conf/jdk-6u37-linux-x64.bin
+	chmod +x $@
+
+java: ${INSTALLFILES}/java/sun-java6-jdk.bin
+	mkdir -p ${INSTALLFILES}/java
 	${APTGET} install \
 		openjdk-7-jre \
 		openjdk-7-jdk \
@@ -203,8 +210,12 @@ java:
 		openjdk-6-jre \
 		openjdk-6-jdk \
 		openjdk-6-doc \
-		sun-java6-jdk \
 		ant ant-doc
+	cd ${INSTALLFILES}/java && \
+		${INSTALLFILES}/java/sun-java6-jdk.bin < /dev/null
+	echo $$( update-alternatives --config java < /dev/null | \
+			sed -En '/java-6-sun/s/[* ]*([0-9]{1,}) *.*$$/\1/p' ) | \
+		update-alternatives --config java
 
 mono:
 	${APTGET} install \
