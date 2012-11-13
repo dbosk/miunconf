@@ -35,9 +35,7 @@ shell:
 	${APTGET} install \
 		pdksh \
 		gnome \
-		kde-standard \
-		xfce4 \
-		xfce4-goodies
+		kde-standard
 
 build:
 	wget -O ${INSTALLFILES}/build.tar.gz \
@@ -94,15 +92,15 @@ build-essential:
 
 db:
 	${APTGET} install \
-		mysql \
-		postgresql
+		mysql-server mysql-client \
+		postgresql postgresql-client postgresql-common < /dev/null
 
 web: db
 	${APTGET} install \
 		apache2 \
 		php5 \
-		pear \
-		chromium \
+		php-pear php-auth php-mail \
+		chromium-browser \
 		firefox
 
 ${INSTALLFILES}/meego/harmattan-sdk-setup.py::
@@ -232,11 +230,20 @@ mono:
 		mono-mcs \
 		mono-tools-devel
 
-l209: all
+
+L209PC?=01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20
+
+l209:
+	for n in ${L209PC}; do \
+		echo "${PASSWORD}" | ssh studadm@CSVL209PC$$n.student.miun.se \
+			"sudo mkdir -p /var/install && sudo chown -R studadm /var/install" ; \
+		scp Makefile studadm@CSVL209PC$$n.student.miun.se:/var/install
+		echo "${PASSWORD}" | ssh studadm@CSVL209PC$$n.student.miun.se \
+			"cd /var/install && make all" & \
+	done
 
 
 miun.pub.mk: build
 miun.package.mk: build
 
 include miun.pub.mk
-include miun.package.mk
