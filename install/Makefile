@@ -50,14 +50,14 @@ utils:
 		p7zip \
 		bzip2
 
-vimrc:
-	wget http://ver.miun.se/conf/vimrc
+${INSTALLFILES}/vimrc:
+	wget -O ${@} http://ver.miun.se/conf/vimrc
 
-/usr/share/vim/vimrc: vimrc
+/usr/share/vim/vimrc: ${INSTALLFILES}/vimrc
 	install -Dp ${^} ${@}
 
-papersize:
-	wget http://ver.miun.se/conf/papersize
+${INSTALLFILES}/papersize:
+	wget -O ${@} http://ver.miun.se/conf/papersize
 
 /etc/papersize: papersize
 	install -Dp $^ $@
@@ -233,6 +233,7 @@ mono:
 
 L209PC?=01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20
 
+# XXX this code does not work yet
 l209:
 	for n in ${L209PC}; do \
 		echo "${PASSWORD}" | ssh studadm@CSVL209PC$$n.student.miun.se \
