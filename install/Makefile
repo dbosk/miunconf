@@ -186,7 +186,7 @@ version:
 		cvs \
 		mercurial
 
-prog: editors java version mono build-essential
+prog: editors java version mono build-essential netprog
 	${APTGET} install \
 		ghc \
 		swi-prolog \
@@ -195,6 +195,11 @@ prog: editors java version mono build-essential
 		python3 \
 		umbrello \
 		dia
+
+netprog:
+	${APTGET} install \
+		lksctp-tools \
+		libsctp-dev
 
 ${INSTALLFILES}/java/sun-java6-jdk.bin:
 	mkdir -p ${INSTALLFILES}/java
