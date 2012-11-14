@@ -193,6 +193,9 @@ prog: editors java version mono build-essential netprog
 		perl \
 		python \
 		python3 \
+		python-qt4 \
+		python-qscintilla2 \
+		eric idle pyqt4-dev-tools python-qt4-doc qt4-designer qt4-dev-tools \
 		umbrello \
 		dia
 
@@ -236,16 +239,21 @@ mono:
 		mono-tools-devel
 
 
+${INSTALLFILES}/sshsudo:
+	wget -O $@ http://${INSTALLFILES}.googlecode.com/svn/trunk/sshsudo
+
 L209PC?=01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20
 
 # XXX this code does not work yet
-l209:
+l209: ${INSTALLFILES}/sshsudo
 	for n in ${L209PC}; do \
-		echo "${PASSWORD}" | ssh studadm@CSVL209PC$$n.student.miun.se \
-			"sudo mkdir -p /var/install && sudo chown -R studadm /var/install" ; \
+		${INSTALLFILES}/sshsudo -u studadm CSVL209PC$$n.student.miun.se \
+			mkdir -p /var/install ; \
+		${INSTALLFILES}/sshsudo -u studadm CSVL209PC$$n.student.miun.se \
+			chown -R studadm /var/install ; \
 		scp Makefile studadm@CSVL209PC$$n.student.miun.se:/var/install
-		echo "${PASSWORD}" | ssh studadm@CSVL209PC$$n.student.miun.se \
-			"cd /var/install && make all" & \
+		${INSTALLFILES}/sshsudo -u studadm CSVL209PC$$n.student.miun.se \
+			make -f /var/install/Makefile all & \
 	done
 
 
