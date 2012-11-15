@@ -53,8 +53,8 @@ utils:
 ${INSTALLFILES}/vimrc:
 	wget -O ${@} http://ver.miun.se/conf/vimrc
 
-/usr/share/vim/vimrc: ${INSTALLFILES}/vimrc
-	install -Dp ${^} ${@}
+#/usr/share/vim/vimrc: ${INSTALLFILES}/vimrc
+#	install -Dp ${^} ${@}
 
 ${INSTALLFILES}/papersize:
 	wget -O ${@} http://ver.miun.se/conf/papersize
@@ -62,7 +62,7 @@ ${INSTALLFILES}/papersize:
 /etc/papersize: papersize
 	install -Dp $^ $@
 
-editors: /usr/share/vim/vimrc
+editors: ${INSTALLFILES}/vimrc
 	${APTGET} install \
 		vim \
 		emacs
