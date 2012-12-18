@@ -197,7 +197,8 @@ prog: editors java version mono build-essential netprog
 		python-qscintilla2 \
 		eric idle pyqt4-dev-tools python-qt4-doc qt4-designer qt4-dev-tools \
 		umbrello \
-		dia
+		dia \
+		boost
 
 netprog:
 	${APTGET} install \
