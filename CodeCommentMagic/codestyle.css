@@ -1,0 +1,73 @@
+/* 
+    Document   : codestyle
+    Created on : Oct 26, 2013, 12:27:23 PM
+    Author     : martin
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+
+#codeView {
+    font-family: monospace;
+    border-radius: 1em;
+    border-style: dotted;
+    border-width: 2px;
+}
+#leftButtonImage, #rightButtonImage{
+    margin-top: 50%;
+    margin-left: 5px;
+    margin-right: 5px;
+    height: 20px;
+    width: 20px;
+}
+#leftButton{
+    float: left;
+}
+#rightButton{
+    float: right;
+}
+#codeTitle{
+    border: 1px solid black;
+    margin:20px;
+    padding-left: 1em;
+}
+#codeSection{
+    padding-left: 1em;
+    display: block;
+    margin:20px;
+    min-height: 600px;
+    background-color: #dfd;
+}
+#codeComments{
+    position: absolute;
+    top:10%;
+    left:20%;
+    background-color: white;
+    
+}
+#codeCommentInfo{
+    background-color: yellow;
+    border: 1px dotted black;
+}
+
+.draggable-holder{
+    margin-top: 20px;
+    padding:10px;
+    border-top: 6px double black;
+    border-top-width: 40%;
+    background-color: white;
+    
+}
+
+#overlay{
+    position: absolute;
+    margin:0px;
+}
+.overlay-line{
+    width:100%;
+    color: transparent;
+}
+.overlay-line:hover{
+    background-color: yellow;
+    opacity: 0.5;
+}
