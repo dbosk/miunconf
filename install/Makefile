@@ -25,7 +25,8 @@ INSTALLFILES?=	/var/install
 	build-essential
 
 all: update shell utils editors miuntex \
-	db web prog mdi ide java version android mediakodning
+	db web prog mdi ide java version android mediakodning \
+	infosak dasak
 
 update: build miuntex ${ANDROID_SDK} ${ANDROID_NDK}
 	${APTGET} update
@@ -238,6 +239,11 @@ mono:
 		mono-dmcs \
 		mono-mcs \
 		mono-tools-devel
+
+infosak: tex shell utils editors
+	${APTGET} install john john-data ophcrack
+
+dasak: infosak build-essential
 
 
 ${INSTALLFILES}/sshsudo:
